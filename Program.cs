@@ -21,10 +21,16 @@ async Task<string> GetWeather(string url)
 class WeatherModel
 {
     public string name { get; set; }
-    private float _weather;
-    public float weather
+    public string description { get; set; }
+    private float _temp_min;
+    private float _temp_max;
+    public float temp_max 
+    {   get => _temp_max - 273.15f;
+        private set => _temp_max = value - 273.15f;
+    }
+    public float temp_min
     {
-        get { return _weather - 273.15f; }
-        private set { _weather = value - 273.15f; }
+        get => _temp_min - 273.15f; 
+        private set => _temp_min = value - 273.15f; 
     }
 }
