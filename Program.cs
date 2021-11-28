@@ -8,29 +8,39 @@ string city = Console.ReadLine();
 string URL = $"https://api.openweathermap.org/data/2.5/weather?q={city}&appid=4dcb331f409e04b9201f3fd8a6c2b455";
 HttpClient client = new HttpClient();
 
-Console.WriteLine(await GetWeather(URL));
+var responseObject = await GetWeather(URL);
+Console.WriteLine($"Description of the weather: {responseObject.weather[0].description}");
+Console.WriteLine($"Min and max temperature of city: Min: {Math.Round(responseObject.main.temp_min_C)}°C," +
+    $" Max: {Math.Round(responseObject.main.temp_max_C)}°C");
 
-async Task<string> GetWeather(string url)
+async Task<WeatherModel> GetWeather(string url)
 {
     var response = await client.GetAsync(url);
     var weatherResponseString = await response.Content.ReadAsStringAsync();
-    var weatherResponseObject = JsonSerializer.Deserialize<WeatherModel>(weatherResponseString);
-    return weatherResponseObject.name;
+    return JsonSerializer.Deserialize<WeatherModel>(weatherResponseString);
 }
 
 class WeatherModel
 {
     public string name { get; set; }
+    public WeatherDescriptionModel[] weather { get; set; }
+    public TemperatureModel main { get; set; }
     public string description { get; set; }
-    private float _temp_min;
-    private float _temp_max;
-    public float temp_max 
-    {   get => _temp_max - 273.15f;
-        private set => _temp_max = value - 273.15f;
-    }
-    public float temp_min
-    {
-        get => _temp_min - 273.15f; 
-        private set => _temp_min = value - 273.15f; 
-    }
+    
+}
+class WeatherDescriptionModel
+{
+    public int id { get; set; }
+    public string main { get; set; }
+    public string description { get; set; }
+    public string icon { get; set; }
+
+}
+class TemperatureModel
+{
+    public float temp_max_C { get => temp_max - 273.15f; set => temp_max = value; }
+    public float temp_min_C { get => temp_min - 273.15f; set => temp_min = value; }
+    public float temp_max {get;set;}
+    public float temp_min { get; set; }
+
 }
