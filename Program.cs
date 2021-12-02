@@ -1,4 +1,4 @@
-﻿//Author: Shamoun Hennawi
+﻿//Author: Shamoun 
 //Date: 23.11.2021
 using System.Text.Json;
 
